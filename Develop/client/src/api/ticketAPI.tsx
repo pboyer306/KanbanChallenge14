@@ -59,15 +59,16 @@ const createTicket = async (body: TicketData) => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${Auth.getToken()}`
           },
-        body: JSON.stringify(body)
-      }
-
-    )
-    const data = response.json();
-
-    if(!response.ok) {
-      throw new Error('invalid API response, check network tab!');
-    }
+        body: JSON.stringify(body),
+      });
+// added this to see if i can make ticket creation work.
+        if (!response.ok) {
+          const error = await response.json();  
+          throw new Error(`Error creating ticket: ${error.message || 'Unknown error'}`);
+        }
+    
+        
+        const data = await response.json();
 
     return data;
 
