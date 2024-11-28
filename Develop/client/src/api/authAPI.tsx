@@ -1,4 +1,7 @@
 import { UserLogin } from "../interfaces/UserLogin";
+import AuthService from '../../src/utils/auth';
+console.log(AuthService.isTokenExpired());
+
 
 const login = async (userInfo: UserLogin) => {
   // TODO: make a POST request to the login route
@@ -13,9 +16,9 @@ const login = async (userInfo: UserLogin) => {
 
 const fetchTickets = async () => {
   const token = localStorage.getItem('token');
-  
-  if (!token) {
-    throw new Error("No token found, please login");
+
+  if (!token || AuthService.isTokenExpired()) {
+    throw new Error("Token is invalid or expired. Please log in again.");
   }
 
   const response = await fetch("api/tickets", {
