@@ -11,15 +11,16 @@ export const login = async (req: Request, res: Response) => {
     where: { username },
 });
 if (!user) {
-    res.status(401);
+    return res.status(401);
 }
 const passwordIsValid = await bcrypt.compare(password, user?.password || "");
 if (!passwordIsValid) {
-    res.status(401);
+   return res.status(401).json({ message: "Please enter correct password."});
 }
+
 const secretKey = process.env.JWT_SECRET_KEY || '';
 const token = jwt.sign({ username }, secretKey, { expiresIn: '10h' });
-res.json({ token });
+return res.json({ token });
 };
 const router = Router();
 // POST /login - Login a user

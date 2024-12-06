@@ -8,6 +8,9 @@ const Login = () => {
     username: '',
     password: ''
   });
+  
+  // State to handle error message
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -19,11 +22,15 @@ const Login = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setError(null); // Reset any previous errors before attempting login
+
     try {
-      const data = await login(loginData);
-      Auth.login(data.token);
+      const data = await login(loginData); // Assuming `login` sends login data to the server
+      Auth.login(data.token); // Store token and redirect
     } catch (err) {
+      // If login fails, set error message
       console.error('Failed to login', err);
+      setError('Login failed. Please check your credentials.');
     }
   };
 
@@ -31,25 +38,30 @@ const Login = () => {
     <div className='container'>
       <form className='form' onSubmit={handleSubmit}>
         <h1>Login</h1>
-        <label >Username</label>
+        
+        {error && <div className="error-message">{error}</div>} {/* Display error message if any */}
+
+        <label>Username</label>
         <input 
           type='text'
           name='username'
           value={loginData.username || ''}
           onChange={handleChange}
         />
-      <label>Password</label>
+
+        <label>Password</label>
         <input 
           type='password'
           name='password'
           value={loginData.password || ''}
           onChange={handleChange}
         />
+
+        <div></div>
         <button type='submit'>Submit Form</button>
       </form>
     </div>
-    
-  )
+  );
 };
 
 export default Login;
