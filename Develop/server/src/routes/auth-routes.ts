@@ -9,18 +9,18 @@ export const login = async (req: Request, res: Response) => {
 
   const user = await User.findOne({
     where: { username },
-});
-if (!user) {
-    return res.status(401);
-}
-const passwordIsValid = await bcrypt.compare(password, user?.password || "");
-if (!passwordIsValid) {
-   return res.status(401).json({ message: "Please enter correct password."});
-}
+  });
+  if (!user) {
+    return res.status(401).json({ message: "User does not exist" })
+  }
+  const passwordIsValid = await bcrypt.compare(password, user?.password || "");
+  if (!passwordIsValid) {
+    return res.status(401).json({ message: "Please enter correct password." });
+  }
 
-const secretKey = process.env.JWT_SECRET_KEY || '';
-const token = jwt.sign({ username }, secretKey, { expiresIn: '10h' });
-return res.json({ token });
+  const secretKey = process.env.JWT_SECRET_KEY || '';
+  const token = jwt.sign({ username }, secretKey, { expiresIn: '10h' });
+  return res.json({ token });
 };
 const router = Router();
 // POST /login - Login a user

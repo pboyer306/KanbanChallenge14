@@ -30,7 +30,7 @@ const Login = () => {
     } catch (err) {
       // If login fails, set error message
       console.error('Failed to login', err);
-      setError('Login failed. Please check your credentials.');
+      setError('Login failed. Please check your credentials.'+err);
     }
   };
 
